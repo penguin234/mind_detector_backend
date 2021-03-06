@@ -1,11 +1,15 @@
 model = require('../requesters/model-requester');
 avgset = require('../requesters/avgset-requester');
 center = require('../requesters/center-requester');
+const { json } = require('body-parser');
 const fetch = require('node-fetch');
 
 function testcon(req, res) {
     function callback(a, b) {
-        res.send({'a':a, 'b':b});
+        conc = {'a':a, 'b':b};
+        conc.level = 6;
+        conc.centers = b.data;
+        res.send(conc);
     }
 
 
@@ -13,10 +17,14 @@ function testcon(req, res) {
         centerServer = 'util-center'
 
         let options = {
-            method: 'GET'
+            method: 'POST',
+            body: JSON.stringify({'province': '경기도_용인시'}),
+            headers: {
+                'Content-Type': 'application/json',
+            },
         };
 
-        let fullURL = 'http://' + centerServer + '/all';
+        let fullURL = 'http://' + centerServer + '/province';
     
         fetch(fullURL, options)
             .then(data => data.json())
